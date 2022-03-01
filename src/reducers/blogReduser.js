@@ -1,15 +1,14 @@
 const initialData = {
     list: [],
-    text: {}
+    editText: {}
 }
 const blogReducer = (state = initialData, action) => {
     switch (action.type) {
         case "Add-Item":
             const { id, data } = action.payload;
-
             return {
                 ...state,
-                list : [
+                list: [
                     ...state.list,
                     {
                         id: id,
@@ -17,20 +16,34 @@ const blogReducer = (state = initialData, action) => {
                     }
                 ]
             }
-            case "Edit-Item":
-                const editList = state.list.filter((element)=>element.id === action.id)
-                return {
-                    ...state,
-                    text: editList
+        case "Save-Item":
+            const {save_id,save_data} = action.payload;
+            state.list.map((element) => {
+                if (element.id===save_id) {
+                    return(element.data=save_data)                  
                 }
+            })
+            return{
+                ...state,
+                list : [
+                    ...state.list,
+                ]
+            }
 
-            case "Delete-Item":
-                const newList = state.list.filter((element)=>element.id !== action.id)
-    
-                return {
-                    ...state,
-                    list : newList
-                }
+        case "Edit-Item":
+            const editItem = state.list.find((element) => element.id === action.id)
+            return {
+                ...state,
+                editText: editItem
+            }
+
+        case "Delete-Item":
+            const newList = state.list.filter((element) => element.id !== action.id)
+
+            return {
+                ...state,
+                list: newList
+            }
         default: return state;
     }
 }
